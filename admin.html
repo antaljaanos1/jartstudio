@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>J'Art Studio - Termék Admin</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; max-width: 600px; margin: 0 auto; }
+    h1 { color: #d4af37; text-align: center; }
+    form { display: flex; flex-direction: column; gap: 12px; background: #1e1e1e; padding: 20px; border-radius: 8px; }
+    input, textarea, select, button { padding: 10px; border-radius: 4px; border: 1px solid #333; background: #2a2a2a; color: #fff; font-size: 16px; }
+    button { background: #d4af37; color: #000; font-weight: bold; cursor: pointer; border: none; margin-top: 10px; }
+    .product-list { margin-top: 30px; }
+    .product-item { display: flex; align-items: center; justify-content: space-between; background: #1e1e1e; padding: 10px; margin-bottom: 8px; border-radius: 4px; }
+    .product-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+    .del-btn { background: #ff4d4d; color: #fff; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h1>Termék Kezelő Admin</h1>
+
+  <form id="productForm">
+    <input type="text" id="nev" placeholder="Termék neve (pl. Minta Váza)" required>
+    <select id="kategoria" required>
+      <option value="vaza">Váza</option>
+      <option value="talca">Tálca</option>
+      <option value="egyeb">Egyéb</option>
+    </select>
+    <input type="text" id="ar" placeholder="Ár (pl. 4 500 Ft)" required>
+    <textarea id="leiras" placeholder="Leírás (választható)" rows="3"></textarea>
+    <input type="number" id="sorrend" placeholder="Sorrend száma (pl. 1)" value="1">
+    <label>Termék képe:</label>
+    <input type="file" id="kepFile" accept="image/*" required>
+    <button type="submit" id="submitBtn">Termék Feltöltése</button>
+  </form>
+
+  <div class="product-list">
+    <h2>Meglévő termékek</h2>
+    <div id="productList">Betöltés...</div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_iaBMUObVjd_zfHC5deYqdw_ewgIQa0o';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const form = document.getElementById('productForm');
+    const productList = document.getElementById('productList');
+
+    async function loadProducts() {
+      const { data, error } = await supabase.from('termekek').select('*').order('sorrend', { ascending: true });
+      if (error) { productList.innerHTML = 'Hiba a betöltéskor!'; return; }
+      if (data.length === 0) { productList.innerHTML = 'Még nincs feltöltött termék.'; return; }
+      
+      productList.innerHTML = data.map(p => `
+        <div class="product-item">
+          <img src="${p.kep_url}" alt="${p.nev}">
+          <div>
+            <strong>${p.nev}</strong><br>
+            <small>${p.ar} | ${p.kategoria}</small>
+          </div>
+          <button class="del-btn" onclick="deleteProduct(${p.id}, '${p.kep_url}')">Törlés</button>
+        </div>
+      `).join('');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.innerText = 'Feltöltés folyamatban...';
+      submitBtn.disabled = true;
+
+      const file = document.getElementById('kepFile').files[0];
+      const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+
+      // 1. Kép feltöltése a Storage-ba
+      const { data: imgData, error: imgError } = await supabase.storage.from('termek-kepek').upload(fileName, file);
+      if (imgError) {
+        alert('Képfeltöltési hiba: ' + imgError.message);
+        submitBtn.innerText = 'Termék Feltöltése';
+        submitBtn.disabled = false;
+        return;
+      }
+
+      // Public URL lekérése
+      const { data: urlData } = supabase.storage.from('termek-kepek').getPublicUrl(fileName);
+      const kep_url = urlData.publicUrl;
+
+      // 2. Adatok mentése a termekek táblába
+      const newProduct = {
+        nev: document.getElementById('nev').value,
+        kategoria: document.getElementById('kategoria').value,
+        ar: document.getElementById('ar').value,
+        leiras: document.getElementById('leiras').value,
+        sorrend: parseInt(document.getElementById('sorrend').value) || 1,
+        kep_url: kep_url
+      };
+
+      const { error: dbError } = await supabase.from('termekek').insert([newProduct]);
+      if (dbError) {
+        alert('Adatbázis hiba: ' + dbError.message);
+      } else {
+        form.reset();
+        loadProducts();
+      }
+
+      submitBtn.innerText = 'Termék Feltöltése';
+      submitBtn.disabled = false;
+    });
+
+    async function deleteProduct(id, kepUrl) {
+      if (!confirm('Biztosan törölni akarod ezt a terméket?')) return;
+      
+      // Törlés az adatbázisból
+      await supabase.from('termekek').delete().eq('id', id);
+
+      // Kép törlése a Storage-ból
+      if (kepUrl) {
+        const parts = kepUrl.split('/');
+        const fileName = parts[parts.length - 1];
+        await supabase.storage.from('termek-kepek').remove([fileName]);
+      }
+
+      loadProducts();
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>
