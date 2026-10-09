@@ -5,6 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>J'Art Studio – Admin</title>
+
+<!-- JELSZÓVÉDELEM AZ ADMINHOZ -->
+<script>
+  const adminPass = "Jart2026!"; // <-- Ezt írd át ha más jelszót szeretnél!
+  if (sessionStorage.getItem("admin_auth") !== "true") {
+    const pass = prompt("Add meg az admin jelszót:");
+    if (pass === adminPass) {
+      sessionStorage.setItem("admin_auth", "true");
+    } else {
+      alert("Hibás jelszó!");
+      window.location.href = "/";
+    }
+  }
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
   :root { --bg:#121212; --card:#1e1e1e; --field:#2a2a2a; --line:#333; --gold:#d4af37; --red:#ff4d4d; --text:#fff; --muted:#999; }
@@ -42,7 +57,6 @@
 <h1>Termék Kezelő</h1>
 <p id="msg" role="status"></p>
 
-<!-- Admin -->
 <div id="app">
   <form id="productForm" class="panel">
     <input type="text" id="nev" placeholder="Termék neve" required maxlength="120">
@@ -72,21 +86,19 @@
   const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_iaBMUObVjd_zfHC5deYqdw_ewgIQa0o';
   const BUCKET = 'termek-kepek';
-  const MAX_SIDE = 1600;      // px – a telefonos 4000px-es fotókat leskálázzuk
+  const MAX_SIDE = 1600;
   const JPEG_QUALITY = 0.85;
 
-  // FONTOS: nem "supabase" a változó neve, mert az ütközik a CDN globálissal
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const $ = id => document.getElementById(id);
-  const form = $('productForm'), list = $('productList'), msg = $('msg');
-  let editing = null;   // szerkesztett termék objektuma, vagy null
+  const form = $('productForm'), list = $('productList'), msg =$('msg');
+  let editing = null;
   let products = [];
 
   function say(text, type = '') { msg.textContent = text; msg.className = type; }
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-  /* ---------- Képkezelés ---------- */
   function resizeImage(file) {
     return new Promise((resolve, reject) => {
       const url = URL.createObjectURL(file);
@@ -106,7 +118,6 @@
   }
 
   function storagePathFromUrl(url) {
-    // .../object/public/termek-kepek/<path>
     const marker = `/${BUCKET}/`;
     const i = url.indexOf(marker);
     return i === -1 ? null : decodeURIComponent(url.slice(i + marker.length).split('?')[0]);
@@ -124,7 +135,6 @@
     p.style.display = 'block';
   });
 
-  /* ---------- Lista ---------- */
   async function loadProducts() {
     const { data, error } = await sb.from('termekek').select('*').order('sorrend', { ascending: true }).order('id', { ascending: true });
     if (error) { list.textContent = 'Hiba a betöltéskor: ' + error.message; return; }
@@ -150,7 +160,6 @@
     btn.dataset.act === 'edit' ? startEdit(p) : deleteProduct(p);
   });
 
-  /* ---------- Szerkesztés ---------- */
   function startEdit(p) {
     editing = p;
     $('nev').value = p.nev;
@@ -158,12 +167,9 @@
     if (![...sel.options].some(o => o.value === p.kategoria)) sel.add(new Option(p.kategoria + ' (régi)', p.kategoria));
     sel.value = p.kategoria;
     $('ar').value = p.ar;
-    $('leiras').value = p.leiras || '';
-    $('sorrend').value = p.sorrend;
-    $('kepFile').value = '';
-    $('preview').src = p.kep_url;
-    $('preview').style.display = 'block';
-    $('kepLabel').textContent = 'Új kép (hagyd üresen, ha marad a régi)';
+    $('leiras').value = p.leiras \vert{}\vert{} '';$('sorrend').value = p.sorrend;
+    $('kepFile').value = '';$('preview').src = p.kep_url;
+    $('preview').style.display = 'block';$('kepLabel').textContent = 'Új kép (hagyd üresen, ha marad a régi)';
     $('submitBtn').textContent = 'Módosítások mentése';
     $('cancelBtn').hidden = false;
     form.scrollIntoView({ behavior: 'smooth' });
@@ -172,14 +178,12 @@
   function resetForm() {
     editing = null;
     form.reset();
-    $('preview').style.display = 'none';
-    $('kepLabel').textContent = 'Termék képe';
+    $('preview').style.display = 'none';$('kepLabel').textContent = 'Termék képe';
     $('submitBtn').textContent = 'Termék feltöltése';
     $('cancelBtn').hidden = true;
   }
   $('cancelBtn').addEventListener('click', resetForm);
 
-  /* ---------- Mentés ---------- */
   form.addEventListener('submit', async e => {
     e.preventDefault();
     say('');
@@ -212,7 +216,7 @@
       if (editing) {
         const { error } = await sb.from('termekek').update(row).eq('id', editing.id);
         if (error) throw new Error('Adatbázis: ' + error.message);
-        if (file) await removeImage(editing.kep_url);   // régi kép csak sikeres mentés után törlődik
+        if (file) await removeImage(editing.kep_url);
       } else {
         const { error } = await sb.from('termekek').insert([row]);
         if (error) throw new Error('Adatbázis: ' + error.message);
@@ -222,7 +226,6 @@
       resetForm();
       loadProducts();
     } catch (err) {
-      // ha a kép már felment, de az adatbázis elbukott, ne maradjon árva fájl
       if (newPath) await sb.storage.from(BUCKET).remove([newPath]);
       say(err.message, 'err');
     } finally {
@@ -231,7 +234,6 @@
     }
   });
 
-  /* ---------- Törlés ---------- */
   async function deleteProduct(p) {
     if (!confirm(`Biztosan törlöd: ${p.nev}?`)) return;
     const { error } = await sb.from('termekek').delete().eq('id', p.id);
