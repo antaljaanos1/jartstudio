@@ -265,7 +265,7 @@ body::before{
 
 <div class="load-msg" id="loadMsg" hidden>Az alkotások betöltése nem sikerült. Próbáld újra később.</div>
 
-<!-- ALKOTÁSOK: az adatbázisból töltődnek, üres kategória automatikusan eltűnik -->
+<!-- ALKOTÁSOK -->
 <section class="gallery-section" id="ujdonsag" hidden>
   <h2>Újdonság</h2>
   <p class="section-desc">A legfrissebb alkotások és munkák</p>
@@ -346,14 +346,28 @@ function setMenu(open) {
   menuToggle.textContent = open ? '✕' : '☰';
 }
 menuToggle.addEventListener('click', () => setMenu(!navLinks.classList.contains('active')));
-navLinks.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+
+// Javított menü kattintás: bezárja a menüt és simán odagördül a horgonyhoz
+navLinks.addEventListener('click', e => { 
+  const link = e.target.closest('a');
+  if (link) {
+    setMenu(false);
+    const targetId = link.getAttribute('href');
+    if (targetId && targetId.startsWith('#')) {
+      e.preventDefault();
+      const targetEl = document.querySelector(targetId);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  } 
+});
 
 /* ---------- Alkotások az adatbázisból ---------- */
 const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_iaBMUObVjd_zfHC5deYqdw_ewgIQa0o';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// adatbázis kategória -> szekció azonosító (a régi "3D Dekoráció" is a Tér és forma alá kerül)
 const SECTION_OF = {
   'Festmények': 'festmenyek',
   'Szén és grafika': 'szen-grafika',
@@ -403,7 +417,6 @@ async function loadProducts() {
   fillSection('ujdonsag', newest);
   ['festmenyek', 'szen-grafika', 'ter-forma', 'egyeb'].forEach(id => fillSection(id, bySection[id] || []));
 
-  // ha jött #horgony, ugorjunk oda, miután betöltött a tartalom
   if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
 }
 loadProducts();
@@ -449,6 +462,4 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.hidden = 
   }
 
   function stroke(a, b) {
-    const dist = Math.hypot(b.x - a.x, b.y - a.y);
-    const steps = Math.max(1, Math.floor(dist / (6 * dpr)));
-    for (let i = 1; i <= steps; i++) blob(a.x + (b.x - a.x) * i / 
+    const dist = Mat
