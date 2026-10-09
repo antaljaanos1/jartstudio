@@ -1,132 +1,248 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>J'Art Studio - Termék Admin</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; max-width: 600px; margin: 0 auto; }
-    h1 { color: #d4af37; text-align: center; }
-    form { display: flex; flex-direction: column; gap: 12px; background: #1e1e1e; padding: 20px; border-radius: 8px; }
-    input, textarea, select, button { padding: 10px; border-radius: 4px; border: 1px solid #333; background: #2a2a2a; color: #fff; font-size: 16px; }
-    button { background: #d4af37; color: #000; font-weight: bold; cursor: pointer; border: none; margin-top: 10px; }
-    .product-list { margin-top: 30px; }
-    .product-item { display: flex; align-items: center; justify-content: space-between; background: #1e1e1e; padding: 10px; margin-bottom: 8px; border-radius: 4px; }
-    .product-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
-    .del-btn { background: #ff4d4d; color: #fff; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>J'Art Studio – Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+  :root { --bg:#121212; --card:#1e1e1e; --field:#2a2a2a; --line:#333; --gold:#d4af37; --red:#ff4d4d; --text:#fff; --muted:#999; }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0 auto; padding: 20px; max-width: 640px; }
+  h1 { color: var(--gold); text-align: center; margin: 0 0 20px; }
+  h2 { margin: 30px 0 12px; }
+  .panel { display: flex; flex-direction: column; gap: 12px; background: var(--card); padding: 20px; border-radius: 8px; }
+  input, textarea, select, button { padding: 12px; border-radius: 4px; border: 1px solid var(--line); background: var(--field); color: var(--text); font: inherit; width: 100%; }
+  input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+  label { font-size: 14px; color: var(--muted); }
+  .btn { background: var(--gold); color: #000; font-weight: bold; cursor: pointer; border: none; }
+  .btn:disabled { opacity: .5; cursor: wait; }
+  .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); font-weight: normal; }
+  .row { display: flex; gap: 8px; }
+  .row > * { flex: 1; }
+  #preview { max-height: 160px; object-fit: contain; border-radius: 4px; display: none; }
+  .item { display: flex; align-items: center; gap: 12px; background: var(--card); padding: 10px; margin-bottom: 8px; border-radius: 4px; }
+  .item img { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; flex: none; background: var(--field); }
+  .item .info { flex: 1; min-width: 0; }
+  .item .info strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .item .info small { color: var(--muted); }
+  .item button { width: auto; padding: 8px 12px; cursor: pointer; }
+  .del { background: var(--red); color: #fff; border: none; }
+  #msg { min-height: 1.4em; text-align: center; margin: 12px 0 0; }
+  #msg.err { color: var(--red); }
+  #msg.ok { color: #6fdc8c; }
+  [hidden] { display: none !important; }
+  .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; color: var(--muted); font-size: 14px; }
+  .top button { width: auto; padding: 6px 12px; }
+</style>
 </head>
 <body>
 
-  <h1>Termék Kezelő Admin</h1>
+<h1>Termék Kezelő</h1>
+<p id="msg" role="status"></p>
 
-  <form id="productForm">
-    <input type="text" id="nev" placeholder="Termék neve (pl. Minta Váza)" required>
+<!-- Admin -->
+<div id="app">
+  <form id="productForm" class="panel">
+    <input type="text" id="nev" placeholder="Termék neve" required maxlength="120">
     <select id="kategoria" required>
-      <option value="vaza">Váza</option>
-      <option value="talca">Tálca</option>
-      <option value="egyeb">Egyéb</option>
+      <option value="Festmények">Festmények</option>
+      <option value="Szén és grafika">Szén és grafika</option>
+      <option value="3D Dekoráció">3D Dekoráció</option>
+      <option value="Egyéb">Egyéb</option>
     </select>
-    <input type="text" id="ar" placeholder="Ár (pl. 4 500 Ft)" required>
-    <textarea id="leiras" placeholder="Leírás (választható)" rows="3"></textarea>
-    <input type="number" id="sorrend" placeholder="Sorrend száma (pl. 1)" value="1">
-    <label>Termék képe:</label>
-    <input type="file" id="kepFile" accept="image/*" required>
-    <button type="submit" id="submitBtn">Termék Feltöltése</button>
+    <input type="text" id="ar" placeholder="Ár (pl. 4 500 Ft)" required maxlength="40">
+    <textarea id="leiras" placeholder="Leírás (nem kötelező)" rows="3" maxlength="1000"></textarea>
+    <input type="number" id="sorrend" placeholder="Sorrend (kisebb = előrébb)" value="1" step="1">
+    <label for="kepFile" id="kepLabel">Termék képe</label>
+    <input type="file" id="kepFile" accept="image/*">
+    <img id="preview" alt="Előnézet">
+    <div class="row">
+      <button class="btn" type="submit" id="submitBtn">Termék feltöltése</button>
+      <button class="btn ghost" type="button" id="cancelBtn" hidden>Mégse</button>
+    </div>
   </form>
 
-  <div class="product-list">
-    <h2>Meglévő termékek</h2>
-    <div id="productList">Betöltés...</div>
-  </div>
+  <h2>Meglévő termékek</h2>
+  <div id="productList">Betöltés...</div>
+</div>
 
-  <script>
-    const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_iaBMUObVjd_zfHC5deYqdw_ewgIQa0o';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<script>
+  const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_iaBMUObVjd_zfHC5deYqdw_ewgIQa0o';
+  const BUCKET = 'termek-kepek';
+  const MAX_SIDE = 1600;      // px – a telefonos 4000px-es fotókat leskálázzuk
+  const JPEG_QUALITY = 0.85;
 
-    const form = document.getElementById('productForm');
-    const productList = document.getElementById('productList');
+  // FONTOS: nem "supabase" a változó neve, mert az ütközik a CDN globálissal
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function loadProducts() {
-      const { data, error } = await supabase.from('termekek').select('*').order('sorrend', { ascending: true });
-      if (error) { productList.innerHTML = 'Hiba a betöltéskor!'; return; }
-      if (data.length === 0) { productList.innerHTML = 'Még nincs feltöltött termék.'; return; }
-      
-      productList.innerHTML = data.map(p => `
-        <div class="product-item">
-          <img src="${p.kep_url}" alt="${p.nev}">
-          <div>
-            <strong>${p.nev}</strong><br>
-            <small>${p.ar} | ${p.kategoria}</small>
-          </div>
-          <button class="del-btn" onclick="deleteProduct(${p.id}, '${p.kep_url}')">Törlés</button>
+  const $ = id => document.getElementById(id);
+  const form = $('productForm'), list = $('productList'), msg = $('msg');
+  let editing = null;   // szerkesztett termék objektuma, vagy null
+  let products = [];
+
+  function say(text, type = '') { msg.textContent = text; msg.className = type; }
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  /* ---------- Képkezelés ---------- */
+  function resizeImage(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const scale = Math.min(1, MAX_SIDE / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * scale);
+        c.height = Math.round(img.height * scale);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        c.toBlob(b => b ? resolve(b) : reject(new Error('Képátalakítás sikertelen')), 'image/jpeg', JPEG_QUALITY);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('A fájl nem olvasható képként')); };
+      img.src = url;
+    });
+  }
+
+  function storagePathFromUrl(url) {
+    // .../object/public/termek-kepek/<path>
+    const marker = `/${BUCKET}/`;
+    const i = url.indexOf(marker);
+    return i === -1 ? null : decodeURIComponent(url.slice(i + marker.length).split('?')[0]);
+  }
+
+  async function removeImage(url) {
+    const path = url && storagePathFromUrl(url);
+    if (path) await sb.storage.from(BUCKET).remove([path]);
+  }
+
+  $('kepFile').addEventListener('change', e => {
+    const f = e.target.files[0], p = $('preview');
+    if (!f) { p.style.display = 'none'; return; }
+    p.src = URL.createObjectURL(f);
+    p.style.display = 'block';
+  });
+
+  /* ---------- Lista ---------- */
+  async function loadProducts() {
+    const { data, error } = await sb.from('termekek').select('*').order('sorrend', { ascending: true }).order('id', { ascending: true });
+    if (error) { list.textContent = 'Hiba a betöltéskor: ' + error.message; return; }
+    products = data;
+    if (!products.length) { list.textContent = 'Még nincs feltöltött termék.'; return; }
+    list.innerHTML = products.map(p => `
+      <div class="item" data-id="${p.id}">
+        <img src="${esc(p.kep_url)}" alt="${esc(p.nev)}" loading="lazy">
+        <div class="info">
+          <strong>${esc(p.nev)}</strong>
+          <small>${esc(p.ar)} · ${esc(p.kategoria)} · #${esc(p.sorrend)}</small>
         </div>
-      `).join('');
-    }
+        <button class="btn ghost" data-act="edit" type="button">Szerk.</button>
+        <button class="del" data-act="del" type="button">Törlés</button>
+      </div>`).join('');
+  }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.innerText = 'Feltöltés folyamatban...';
-      submitBtn.disabled = true;
+  list.addEventListener('click', e => {
+    const btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    const p = products.find(x => String(x.id) === btn.closest('.item').dataset.id);
+    if (!p) return;
+    btn.dataset.act === 'edit' ? startEdit(p) : deleteProduct(p);
+  });
 
-      const file = document.getElementById('kepFile').files[0];
-      const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+  /* ---------- Szerkesztés ---------- */
+  function startEdit(p) {
+    editing = p;
+    $('nev').value = p.nev;
+    const sel = $('kategoria');
+    if (![...sel.options].some(o => o.value === p.kategoria)) sel.add(new Option(p.kategoria + ' (régi)', p.kategoria));
+    sel.value = p.kategoria;
+    $('ar').value = p.ar;
+    $('leiras').value = p.leiras || '';
+    $('sorrend').value = p.sorrend;
+    $('kepFile').value = '';
+    $('preview').src = p.kep_url;
+    $('preview').style.display = 'block';
+    $('kepLabel').textContent = 'Új kép (hagyd üresen, ha marad a régi)';
+    $('submitBtn').textContent = 'Módosítások mentése';
+    $('cancelBtn').hidden = false;
+    form.scrollIntoView({ behavior: 'smooth' });
+  }
 
-      // 1. Kép feltöltése a Storage-ba
-      const { data: imgData, error: imgError } = await supabase.storage.from('termek-kepek').upload(fileName, file);
-      if (imgError) {
-        alert('Képfeltöltési hiba: ' + imgError.message);
-        submitBtn.innerText = 'Termék Feltöltése';
-        submitBtn.disabled = false;
-        return;
-      }
+  function resetForm() {
+    editing = null;
+    form.reset();
+    $('preview').style.display = 'none';
+    $('kepLabel').textContent = 'Termék képe';
+    $('submitBtn').textContent = 'Termék feltöltése';
+    $('cancelBtn').hidden = true;
+  }
+  $('cancelBtn').addEventListener('click', resetForm);
 
-      // Public URL lekérése
-      const { data: urlData } = supabase.storage.from('termek-kepek').getPublicUrl(fileName);
-      const kep_url = urlData.publicUrl;
+  /* ---------- Mentés ---------- */
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    say('');
+    const btn = $('submitBtn'), label = btn.textContent;
+    const file = $('kepFile').files[0];
 
-      // 2. Adatok mentése a termekek táblába
-      const newProduct = {
-        nev: document.getElementById('nev').value,
-        kategoria: document.getElementById('kategoria').value,
-        ar: document.getElementById('ar').value,
-        leiras: document.getElementById('leiras').value,
-        sorrend: parseInt(document.getElementById('sorrend').value) || 1,
-        kep_url: kep_url
+    if (!editing && !file) { say('Kép nélkül nem lehet új terméket felvenni.', 'err'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Mentés folyamatban...';
+    let newPath = null;
+
+    try {
+      const row = {
+        nev: $('nev').value.trim(),
+        kategoria: $('kategoria').value,
+        ar: $('ar').value.trim(),
+        leiras: $('leiras').value.trim(),
+        sorrend: parseInt($('sorrend').value, 10) || 1
       };
 
-      const { error: dbError } = await supabase.from('termekek').insert([newProduct]);
-      if (dbError) {
-        alert('Adatbázis hiba: ' + dbError.message);
+      if (file) {
+        const blob = await resizeImage(file);
+        newPath = `${Date.now()}_${crypto.randomUUID().slice(0, 8)}.jpg`;
+        const { error } = await sb.storage.from(BUCKET).upload(newPath, blob, { contentType: 'image/jpeg', cacheControl: '31536000' });
+        if (error) throw new Error('Képfeltöltés: ' + error.message);
+        row.kep_url = sb.storage.from(BUCKET).getPublicUrl(newPath).data.publicUrl;
+      }
+
+      if (editing) {
+        const { error } = await sb.from('termekek').update(row).eq('id', editing.id);
+        if (error) throw new Error('Adatbázis: ' + error.message);
+        if (file) await removeImage(editing.kep_url);   // régi kép csak sikeres mentés után törlődik
       } else {
-        form.reset();
-        loadProducts();
+        const { error } = await sb.from('termekek').insert([row]);
+        if (error) throw new Error('Adatbázis: ' + error.message);
       }
 
-      submitBtn.innerText = 'Termék Feltöltése';
-      submitBtn.disabled = false;
-    });
-
-    async function deleteProduct(id, kepUrl) {
-      if (!confirm('Biztosan törölni akarod ezt a terméket?')) return;
-      
-      // Törlés az adatbázisból
-      await supabase.from('termekek').delete().eq('id', id);
-
-      // Kép törlése a Storage-ból
-      if (kepUrl) {
-        const parts = kepUrl.split('/');
-        const fileName = parts[parts.length - 1];
-        await supabase.storage.from('termek-kepek').remove([fileName]);
-      }
-
+      say(editing ? 'Módosítva.' : 'Feltöltve.', 'ok');
+      resetForm();
       loadProducts();
+    } catch (err) {
+      // ha a kép már felment, de az adatbázis elbukott, ne maradjon árva fájl
+      if (newPath) await sb.storage.from(BUCKET).remove([newPath]);
+      say(err.message, 'err');
+    } finally {
+      btn.disabled = false;
+      if (btn.textContent === 'Mentés folyamatban...') btn.textContent = label;
     }
+  });
 
+  /* ---------- Törlés ---------- */
+  async function deleteProduct(p) {
+    if (!confirm(`Biztosan törlöd: ${p.nev}?`)) return;
+    const { error } = await sb.from('termekek').delete().eq('id', p.id);
+    if (error) { say('Törlési hiba: ' + error.message, 'err'); return; }
+    await removeImage(p.kep_url);
+    if (editing && editing.id === p.id) resetForm();
+    say('Törölve.', 'ok');
     loadProducts();
-  </script>
+  }
+
+  loadProducts();
+</script>
 </body>
 </html>
