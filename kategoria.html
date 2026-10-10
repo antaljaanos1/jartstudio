@@ -52,6 +52,9 @@ h1{ font-family:'Fraunces',serif; font-size:clamp(2.2rem,6vw,3.4rem); font-weigh
 .lightbox img{ max-width:100%; max-height:100%; object-fit:contain; }
 
 .site-footer{ text-align:center; padding:30px; font-family:'Space Mono',monospace; font-size:.7rem; color:var(--smoke); border-top:1px solid var(--gold-line); }
+.footer-links{ display:flex; gap:18px; justify-content:center; flex-wrap:wrap; margin-bottom:10px; }
+.footer-links a{ border-bottom:1px solid var(--gold-line); }
+.footer-links a:hover{ color:var(--rust); }
 </style>
 </head>
 
@@ -73,7 +76,14 @@ h1{ font-family:'Fraunces',serif; font-size:clamp(2.2rem,6vw,3.4rem); font-weigh
   <p class="note" id="note" hidden></p>
 </main>
 
-<footer class="site-footer"><p>© 2026 J'Art Studio. Minden jog fenntartva.</p></footer>
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="tajekoztato.html#adatkezeles">Adatkezelés</a>
+    <a href="tajekoztato.html#vasarlas">Vásárlás</a>
+    <a href="tajekoztato.html#impresszum">Impresszum</a>
+  </div>
+  <p>© 2026 J'Art Studio. Minden jog fenntartva.</p>
+</footer>
 
 <script>
 const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
