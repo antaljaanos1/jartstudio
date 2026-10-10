@@ -114,8 +114,8 @@ mark{ background:var(--acid); color:var(--black); padding:0 4px; }
     <div class="facts">
       <p><strong>Adatkezelő</strong> Antal János E. V. (J’Art Studio)</p>
       <p><strong>Székhely</strong> 3770 Sajószentpéter, Május 1. utca 32.</p>
-      <p><strong>E-mail</strong> <span data-f="antaljaanos1@gmail.com"></span></p>
-      <p><strong>Telefonszám</strong> <span data-f="+36704216563"></span></p>
+      <p><strong>E-mail</strong> <span data-f=antaljaanos1@gmail.com></span></p>
+      <p><strong>Telefonszám</strong> <span data-f=+36704216563></span></p>
     </div>
 
     <h3>Az adatkezelés célja és jogalapja</h3>
@@ -180,11 +180,12 @@ mark{ background:var(--acid); color:var(--black); padding:0 4px; }
    Ami üres marad, az az oldalon sárgán jelenik meg, hogy ne maradjon észrevétlen.
 ============================================================ */
 const ADATOK = {
-  email: antaljaanos1@gmail.com  '',               // pl. valami@gmail.com
-  telefon: +3670/421-6563 '',               // pl. +36 30 123 4567
-  nyilvszam: '62808013',       // egyéni vállalkozói nyilvántartási szám
-  adoszam: 92375341-1-25  ''                // pl. 12345678-1-05
+  email: 'antaljaanos1@gmail.com',
+  telefon: '+3670/421-6563',
+  nyilvszam: '62808013',
+  adoszam: '92375341-1-25'
 };
+  
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LABEL = { email: 'E-MAIL CÍM', telefon: 'TELEFONSZÁM', nyilvszam: 'NYILVÁNTARTÁSI SZÁM', adoszam: 'ADÓSZÁM' };
