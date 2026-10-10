@@ -114,89 +114,10 @@ mark{ background:var(--acid); color:var(--black); padding:0 4px; }
     <div class="facts">
       <p><strong>Adatkezelő</strong> Antal János E. V. (J’Art Studio)</p>
       <p><strong>Székhely</strong> 3770 Sajószentpéter, Május 1. utca 32.</p>
-      <p><strong>E-mail</strong> <span data-f=antaljaanos1@gmail.com></span></p>
-      <p><strong>Telefonszám</strong> <span data-f=+36704216563></span></p>
+      <p><strong>E-mail</strong> <span data-f="email"></span></p>
+      <p><strong>Telefonszám</strong> <span data-f="telefon"></span></p>
     </div>
 
     <h3>Az adatkezelés célja és jogalapja</h3>
-    <p>A személyes adatokat kizárólag a jogszabályi keretek között, a következő célokból és jogalapokkal kezelem:</p>
-    <ul>
-      <li><strong>Kapcsolatfelvétel, ajánlatkérés és megrendelés előkészítése:</strong> Az adatkezelés jogalapja a GDPR 6. cikk (1) bekezdés b) pontja (az érintett kérésére történő, szerződéskötést megelőző lépések megtétele).</li>
-      <li><strong>Megrendelés teljesítése és kézbesítés:</strong> Az adatkezelés jogalapja a GDPR 6. cikk (1) bekezdés b) pontja (szerződés teljesítése).</li>
-      <li><strong>Számlázás és számvitel:</strong> Az adatkezelés jogalapja a GDPR 6. cikk (1) bekezdés c) pontja (jogi kötelezettség teljesítése).</li>
-    </ul>
-
-    <h3>Kezelt adatok köre</h3>
-    <p>A kapcsolatfelvétel és a rendelés jellegétől függően név, e-mail-cím, telefonszám, számlázási cím, valamint szállítás esetén a szállítási cím.</p>
-
-    <h3>Adattovábbítás és címzettek</h3>
-    <p>A személyes adatokat bizalmasan kezelem. Azokat csak olyan szolgáltatók részére továbbítom, akiknek a bevonása a folyamathoz elengedhetetlenül szükséges:</p>
-    <ul>
-      <li>Számlázási szolgáltató / program (pl. Billingo vagy Számlázz.hu),</li>
-      <li>Könyvelő,</li>
-      <li>A konkrét megrendeléshez kiválasztott futárszolgálat (pl. Foxpost, GLS, Packeta, MPL),</li>
-      <li>A weboldal kapcsolatfelvételi űrlapját működtető szolgáltató (Formspree, USA), amelyen keresztül az elküldött üzenet eljut hozzám.</li>
-    </ul>
-    <p>Személyes adatokat marketingcélból harmadik félnek nem adok át.</p>
-
-    <h3>Adatmegőrzés</h3>
-    <p>A személyes adatokat csak a cél eléréséhez szükséges ideig kezelem. A számviteli bizonylatokat és a jogszabály alapján megőrzendő számviteli és számlázási adatokat a számviteli törvény előírásai szerint 8 évig köteles vagyok megőrizni.</p>
-
-    <h3>A weboldal használata</h3>
-    <p>A weboldal nem használ analitikai vagy marketing célú sütiket, és nem követi a látogatók tevékenységét. A weboldal tárhelyét a Netlify (USA) biztosítja, a betűtípusokat a Google Fonts szolgáltatásból tölti be, ami a böngésző IP-címének technikai továbbításával járhat.</p>
-
-    <h3>Az érintett jogai</h3>
-    <p>Kérhetsz tájékoztatást az adataidról, kérheted azok helyesbítését vagy törlését (kivéve a jogszabályi kötelezettség miatt őrzendő számlákat). Ha panaszod van, először keress engem bizalommal, vagy jogod van panaszt tenni a Nemzeti Adatvédelmi és Információszabadság Hatóságnál (NAIH).</p>
-  </section>
-
-  <!-- ===================== 3. IMPRESSZUM ===================== -->
-  <section id="impresszum">
-    <h2>3. Szolgáltató adatai (impresszum)</h2>
-    <div class="facts">
-      <p><strong>Név</strong> Antal János egyéni vállalkozó</p>
-      <p><strong>Márkanév</strong> J’Art Studio</p>
-      <p><strong>Székhely</strong> 3770 Sajószentpéter, Május 1. utca 32.</p>
-      <p><strong>Nyilvántartási szám</strong> <span data-f="nyilvszam"></span></p>
-      <p><strong>Adószám</strong> <span data-f="adoszam"></span></p>
-      <p><strong>E-mail</strong> <span data-f="email"></span></p>
-      <p><strong>Telefonszám</strong> <span data-f="telefon"></span></p>
-      <p><strong>Tárhelyszolgáltató</strong> Netlify, Inc. (USA)</p>
-    </div>
-  </section>
-</main>
-
-<footer class="site-footer">
-  <div class="footer-links">
-    <a href="tajekoztato.html#adatkezeles">Adatkezelés</a>
-    <a href="tajekoztato.html#vasarlas">Vásárlás</a>
-    <a href="tajekoztato.html#impresszum">Impresszum</a>
-  </div>
-  <p>© 2026 J'Art Studio. Minden jog fenntartva.</p>
-</footer>
-
-<script>
-/* ============================================================
-   A SZEMÉLYES ADATOKAT CSAK ITT KELL KITÖLTENED.
-   Ami üres marad, az az oldalon sárgán jelenik meg, hogy ne maradjon észrevétlen.
-============================================================ */
-const ADATOK = {
-  email: 'antaljaanos1@gmail.com',
-  telefon: '+3670/421-6563',
-  nyilvszam: '62808013',
-  adoszam: '92375341-1-25'
-};
-  
-
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const LABEL = { email: 'E-MAIL CÍM', telefon: 'TELEFONSZÁM', nyilvszam: 'NYILVÁNTARTÁSI SZÁM', adoszam: 'ADÓSZÁM' };
-
-document.querySelectorAll('[data-f]').forEach(el => {
-  const k = el.dataset.f, v = (ADATOK[k] || '').trim();
-  if (!v) { el.innerHTML = `<mark>[${LABEL[k]} IDE]</mark>`; return; }
-  if (k === 'email') el.innerHTML = `<a href="mailto:${esc(v)}">${esc(v)}</a>`;
-  else if (k === 'telefon') el.innerHTML = `<a href="tel:${esc(v.replace(/[^+\d]/g, ''))}">${esc(v)}</a>`;
-  else el.textContent = v;
-});
-</script>
-</body>
-</html>
+    <p
+      
