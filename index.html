@@ -107,7 +107,12 @@ body::before{
 .form-field textarea{ min-height:110px; resize:vertical; }
 .order-submit{ display:inline-block; width:100%; padding:14px; background:var(--rust); color:var(--bone); border:none; font-family:'Space Mono',monospace; font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; cursor:pointer; transition:background .3s,color .3s; }
 .order-submit:hover{ background:var(--acid); color:var(--black); }
+.form-note{ margin-top:14px; font-size:.78rem; line-height:1.6; color:rgba(237,230,214,.6); }
+.form-note a{ border-bottom:1px solid var(--gold-line); }
 .site-footer{ text-align:center; padding:30px; font-family:'Space Mono',monospace; font-size:.7rem; color:var(--smoke); border-top:1px solid var(--gold-line); }
+.footer-links{ display:flex; gap:18px; justify-content:center; flex-wrap:wrap; margin-bottom:10px; }
+.footer-links a{ border-bottom:1px solid var(--gold-line); }
+.footer-links a:hover{ color:var(--rust); }
 
 @media(max-width:600px){
   .about-section{ padding:75px 25px; }
@@ -233,13 +238,21 @@ body::before{
         <textarea id="f-msg" name="message" required></textarea>
       </div>
       <button type="submit" class="order-submit">Küldés</button>
+      <p class="form-note">Az üzenet elküldésével tudomásul veszed az <a href="tajekoztato.html#adatkezeles">adatkezelési tájékoztatóban</a> foglaltakat.</p>
     </form>
   </div>
 </section>
 
 </main>
 
-<footer class="site-footer"><p>© 2026 J'Art Studio. Minden jog fenntartva.</p></footer>
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="tajekoztato.html#adatkezeles">Adatkezelés</a>
+    <a href="tajekoztato.html#vasarlas">Vásárlás</a>
+    <a href="tajekoztato.html#impresszum">Impresszum</a>
+  </div>
+  <p>© 2026 J'Art Studio. Minden jog fenntartva.</p>
+</footer>
 
 <script>
 /* Ez a rész NEM függ a Supabase-től: ha az adatbázis elérhetetlen, a menü és a rajzolás akkor is megy. */
@@ -291,21 +304,4 @@ navLinks.addEventListener('click', e => { if (e.target.closest('a')) setMenu(fal
   cv.addEventListener('pointermove', e => { if (!down) return; const p = pos(e); stroke(last, p); last = p; wake(); });
   const up = () => { down = false; };
   cv.addEventListener('pointerup', up);
-  cv.addEventListener('pointercancel', up);
-})();
-</script>
-<script>
-const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_iaBMUObVjd_zfHC5deYqdw_ewgIQa0o';
-const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
-
-// Új kategóriához: ide, a kategoria.html-be és az admin.html select-jébe is írj egy sort.
-const CATS = [
-  { key: 'festmenyek',   name: 'Festmények',      db: ['Festmények'] },
-  { key: 'szen-grafika', name: 'Szén és grafika', db: ['Szén és grafika'] },
-  { key: 'ter-forma',    name: 'Tér és forma',    db: ['Tér és forma', '3D Dekoráció'] },
-  { key: 'egyeb',        name: 'Egyéb',           db: ['Egyéb'] }
-];
-const NEWEST_COUNT = 3;
-
-const esc
+  cv.addEventListener
