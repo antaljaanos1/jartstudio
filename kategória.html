@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kategória – J'Art Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,0..144,300;1,0..144,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{
+  --black:#16130F; --deep:#211D18; --bone:#EDE6D6;
+  --rust:#C1440E; --acid:#C9A227; --gold-line:rgba(201,162,39,.45); --smoke:#8A8577;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{ background:var(--bone); color:var(--black); font-family:'Work Sans',sans-serif; font-weight:300; line-height:1.6; overflow-x:hidden; }
+a{ color:inherit; text-decoration:none; }
+[hidden]{ display:none !important; }
+body::before{
+  content:""; position:fixed; inset:0; z-index:999; pointer-events:none; opacity:.045; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+::selection{ background:var(--rust); color:var(--bone); }
+
+.site-header{ position:sticky; top:0; z-index:500; background:rgba(237,230,214,.96); backdrop-filter:blur(10px); border-bottom:1px solid var(--black); box-shadow:0 1px 0 var(--gold-line); padding:12px 18px; }
+.header-inner{ width:100%; max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.brand-logo{ display:block; }
+.brand-logo img{ height:40px; width:auto; display:block; }
+.back-top{ font-family:'Space Mono',monospace; font-size:.7rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; border-bottom:1px solid var(--gold-line); padding-bottom:2px; }
+.back-top:hover{ color:var(--rust); }
+
+.cat-bar{ display:flex; align-items:center; gap:10px; padding:10px 18px; background:var(--deep); border-bottom:1px solid var(--gold-line); overflow-x:auto; white-space:nowrap; }
+.cat-bar > span{ font-family:'Space Mono',monospace; font-size:.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--acid); margin-right:6px; flex:none; }
+.cat-bar a{ flex:none; padding:6px 12px; border:1px solid var(--gold-line); font-family:'Space Mono',monospace; font-size:.7rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--bone); transition:background .2s,color .2s; }
+.cat-bar a:hover{ background:var(--acid); color:var(--black); }
+.cat-bar a.current{ background:var(--rust); border-color:var(--rust); }
+
+.container{ max-width:1200px; margin:0 auto; padding:40px 20px 70px; }
+h1{ font-family:'Fraunces',serif; font-size:clamp(2.2rem,6vw,3.4rem); font-weight:300; font-style:italic; line-height:1.15; letter-spacing:-0.5px; margin-bottom:6px; }
+.section-desc{ font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--smoke); margin-bottom:30px; }
+.note{ padding:40px 0; color:var(--smoke); font-family:'Space Mono',monospace; font-size:.8rem; }
+
+.grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; }
+.art-card{ background:var(--deep); border:1px solid var(--gold-line); color:var(--bone); display:flex; flex-direction:column; overflow:hidden; }
+.art-card img{ width:100%; height:280px; object-fit:cover; display:block; background:var(--black); cursor:zoom-in; }
+.art-body{ padding:16px 18px 20px; display:flex; flex-direction:column; gap:6px; flex:1; }
+.art-title{ font-family:'Fraunces',serif; font-size:1.3rem; font-weight:300; line-height:1.25; }
+.art-price{ font-family:'Space Mono',monospace; font-size:.8rem; font-weight:700; letter-spacing:1px; color:var(--acid); }
+.art-desc{ font-size:.9rem; line-height:1.7; color:rgba(237,230,214,.72); white-space:pre-line; }
+.lightbox{ position:fixed; inset:0; z-index:2000; background:rgba(12,10,8,.94); display:flex; align-items:center; justify-content:center; padding:20px; cursor:zoom-out; }
+.lightbox img{ max-width:100%; max-height:100%; object-fit:contain; }
+
+.site-footer{ text-align:center; padding:30px; font-family:'Space Mono',monospace; font-size:.7rem; color:var(--smoke); border-top:1px solid var(--gold-line); }
+</style>
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand-logo"><img src="logo.png" alt="J'Art Studio"></a>
+    <a href="index.html" class="back-top">← Főoldal</a>
+  </div>
+</header>
+
+<nav class="cat-bar" id="catBar" aria-label="Kategóriák"><span>Kategóriák</span></nav>
+
+<main class="container">
+  <h1 id="catTitle">&nbsp;</h1>
+  <p class="section-desc" id="catDesc"></p>
+  <div class="grid" id="grid"></div>
+  <p class="note" id="note" hidden></p>
+</main>
+
+<footer class="site-footer"><p>© 2026 J'Art Studio. Minden jog fenntartva.</p></footer>
+
+<script>
+const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_iaBMUObVjd_zfHC5deYqdw_ewgIQa0o';
+const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+// Ugyanaz a lista, mint az index.html-ben. Új kategóriát mindkét helyre (és az admin-ba) írj be.
+const CATS = [
+  { key: 'festmenyek',   name: 'Festmények',      desc: 'Vásznak, akril és olaj munkák',               db: ['Festmények'] },
+  { key: 'szen-grafika', name: 'Szén és grafika', desc: 'Szénrajzok, ceruza és papír alapú alkotások', db: ['Szén és grafika'] },
+  { key: 'ter-forma',    name: 'Tér és forma',    desc: 'Plasztikák, szobrok és egyedi tárgyak',       db: ['Tér és forma', '3D Dekoráció'] },
+  { key: 'egyeb',        name: 'Egyéb',           desc: 'Egyedi darabok és különlegességek',           db: ['Egyéb'] }
+];
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const key = new URLSearchParams(location.search).get('k');
+const cat = CATS.find(c => c.key === key);
+const note = document.getElementById('note');
+
+document.getElementById('catBar').insertAdjacentHTML('beforeend',
+  CATS.map(c => `<a href="kategoria.html?k=${c.key}"${c === cat ? ' class="current"' : ''}>${esc(c.name)}</a>`).join(''));
+
+(async function () {
+  if (!cat) {
+    document.getElementById('catTitle').textContent = 'Nincs ilyen kategória';
+    note.textContent = 'Válassz a fenti sorból, vagy menj vissza a főoldalra.';
+    note.hidden = false;
+    return;
+  }
+
+  document.title = `${cat.name} – J'Art Studio`;
+  document.getElementById('catTitle').textContent = cat.name;
+  document.getElementById('catDesc').textContent = cat.desc;
+
+  try {
+    if (!sb) throw new Error('Supabase nem töltődött be');
+    const { data, error } = await sb.from('termekek').select('*')
+      .order('sorrend', { ascending: true })
+      .order('id', { ascending: false });
+    if (error) throw error;
+
+    const items = data.filter(p => cat.db.includes(p.kategoria));
+    if (!items.length) {
+      note.textContent = 'Ebben a kategóriában még nincs feltöltött alkotás.';
+      note.hidden = false;
+      return;
+    }
+    document.getElementById('grid').innerHTML = items.map(p => `
+      <article class="art-card">
+        <img src="${esc(p.kep_url)}" alt="${esc(p.nev)}" loading="lazy">
+        <div class="art-body">
+          <h3 class="art-title">${esc(p.nev)}</h3>
+          <div class="art-price">${esc(p.ar)}</div>
+          ${p.leiras ? `<p class="art-desc">${esc(p.leiras)}</p>` : ''}
+        </div>
+      </article>`).join('');
+  } catch (err) {
+    console.error(err);
+    note.textContent = 'Az alkotások betöltése nem sikerült. Próbáld újra később.';
+    note.hidden = false;
+  }
+})();
+
+/* ---------- Kép nagyítás ---------- */
+const lb = document.createElement('div');
+lb.className = 'lightbox';
+lb.hidden = true;
+lb.innerHTML = '<img alt="">';
+document.body.appendChild(lb);
+document.addEventListener('click', e => {
+  const img = e.target.closest('.art-card img');
+  if (img) { lb.querySelector('img').src = img.src; lb.hidden = false; }
+  else if (e.target.closest('.lightbox')) lb.hidden = true;
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.hidden = true; });
+</script>
+</body>
+</html>
