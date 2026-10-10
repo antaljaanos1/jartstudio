@@ -3,66 +3,228 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#EDE6D6">
 <title>Vásárlási és Adatkezelési Tájékoztató – J'Art Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,0..144,300;1,0..144,400&display=swap" rel="stylesheet">
 <style>
-:root{
-  --black:#16130F; --deep:#211D18; --bone:#EDE6D6;
-  --rust:#C1440E; --acid:#C9A227; --gold-line:rgba(201,162,39,.45); --smoke:#8A8577;
+:root {
+  --black: #16130F;
+  --deep: #211D18;
+  --bone: #EDE6D6;
+  --cream: #F5EFE3;
+  --rust: #C1440E;
+  --acid: #C9A227;
+  --gold-line: rgba(201,162,39,.45);
+  --smoke: #8A8577;
 }
-*{ margin:0; padding:0; box-sizing:border-box; }
-html{ scroll-behavior:smooth; }
-body{ background:var(--bone); color:var(--black); font-family:'Work Sans',sans-serif; font-weight:300; line-height:1.75; overflow-x:hidden; }
-a{ color:inherit; }
-body::before{
-  content:""; position:fixed; inset:0; z-index:999; pointer-events:none; opacity:.045; mix-blend-mode:multiply;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bone);
+  color: var(--black);
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 300;
+  line-height: 1.75;
+  overflow-x: hidden;
 }
-::selection{ background:var(--rust); color:var(--bone); }
-section{ scroll-margin-top:80px; }
+a { color: inherit; }
+::selection { background: var(--rust); color: var(--bone); }
+section { scroll-margin-top: 80px; }
 
-.site-header{ position:sticky; top:0; z-index:500; background:rgba(237,230,214,.96); backdrop-filter:blur(10px); border-bottom:1px solid var(--black); box-shadow:0 1px 0 var(--gold-line); padding:10px 18px; }
-.header-inner{ width:100%; max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:12px; }
-.brand-logo{ display:block; text-decoration:none; }
-.brand-logo img{ height:40px; width:auto; display:block; }
-.back-top{ font-family:'Space Mono',monospace; font-size:.7rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; text-decoration:none; border-bottom:1px solid var(--gold-line); padding-bottom:2px; }
-.back-top:hover{ color:var(--rust); }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: .045;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
 
-main{ max-width:760px; margin:0 auto; padding:50px 20px 80px; }
-h1{ font-family:'Fraunces',serif; font-size:clamp(2.2rem,6vw,3.2rem); font-weight:300; font-style:italic; line-height:1.15; letter-spacing:-0.5px; margin-bottom:18px; }
-.updated{ font-family:'Space Mono',monospace; font-size:.7rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--smoke); margin-bottom:26px; }
-.toc{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:40px; }
-.toc a{ padding:8px 14px; border:1px solid var(--black); font-family:'Space Mono',monospace; font-size:.7rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; text-decoration:none; transition:background .2s,color .2s; }
-.toc a:hover{ background:var(--black); color:var(--bone); }
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: rgba(237,230,214,.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--black);
+  box-shadow: 0 1px 0 var(--gold-line);
+  padding: 10px 18px;
+}
+.header-inner {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.brand-logo { display: block; text-decoration: none; }
+.brand-logo img { height: 40px; width: auto; display: block; }
+.back-top {
+  font-family: 'Space Mono', monospace;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold-line);
+  padding-bottom: 2px;
+}
+.back-top:hover { color: var(--rust); }
 
-section{ padding-top:36px; margin-top:36px; border-top:1px solid var(--gold-line); }
-section:first-of-type{ border-top:none; margin-top:0; padding-top:0; }
-h2{ font-family:'Fraunces',serif; font-size:clamp(1.7rem,4.5vw,2.2rem); font-weight:300; font-style:italic; line-height:1.2; margin-bottom:16px; }
-h3{ font-family:'Space Mono',monospace; font-size:.78rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--rust); margin:28px 0 8px; }
-p{ margin-bottom:14px; }
-ul{ margin:0 0 14px 22px; }
-li{ margin-bottom:8px; padding-left:4px; }
-.facts{ background:var(--deep); color:var(--bone); border:1px solid var(--gold-line); padding:22px 24px; }
-.facts p{ margin-bottom:8px; }
-.facts strong{ font-family:'Space Mono',monospace; font-size:.72rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--acid); display:inline-block; min-width:150px; }
-.facts a{ color:var(--bone); border-bottom:1px solid var(--gold-line); }
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 50px 20px 80px;
+}
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.2rem, 6vw, 3.2rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.15;
+  letter-spacing: -.5px;
+  margin-bottom: 18px;
+}
+.updated {
+  font-family: 'Space Mono', monospace;
+  font-size: .7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--smoke);
+  margin-bottom: 26px;
+}
+.toc { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+.toc a {
+  padding: 8px 14px;
+  border: 1px solid var(--black);
+  font-family: 'Space Mono', monospace;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background .2s, color .2s;
+}
+.toc a:hover { background: var(--black); color: var(--bone); }
 
-.site-footer{ text-align:center; padding:30px; font-family:'Space Mono',monospace; font-size:.7rem; color:var(--smoke); border-top:1px solid var(--gold-line); }
-.footer-links{ display:flex; gap:18px; justify-content:center; flex-wrap:wrap; margin-bottom:10px; }
-.footer-links a{ border-bottom:1px solid var(--gold-line); text-decoration:none; }
-.footer-links a:hover{ color:var(--rust); }
-@media(max-width:600px){ .facts strong{ display:block; min-width:0; } }
-@media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+main > section {
+  padding-top: 36px;
+  margin-top: 36px;
+  border-top: 1px solid var(--gold-line);
+}
+main > section:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.7rem, 4.5vw, 2.2rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+h3 {
+  font-family: 'Space Mono', monospace;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin: 28px 0 8px;
+}
+p { margin-bottom: 14px; }
+ul { margin: 0 0 14px 22px; }
+li { margin-bottom: 8px; padding-left: 4px; }
+
+/* Az adatok címkéje és értéke külön elem, külön színnel jelenik meg. */
+.facts {
+  display: block;
+  width: 100%;
+  background: var(--deep);
+  color: var(--bone);
+  border: 1px solid var(--gold-line);
+  padding: 22px 24px;
+  overflow-wrap: anywhere;
+}
+.facts p {
+  display: block;
+  margin: 0 0 14px;
+  color: var(--bone);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.facts p:last-child { margin-bottom: 0; }
+.facts strong {
+  display: block;
+  min-width: 0;
+  margin-bottom: 3px;
+  color: var(--acid);
+  font-family: 'Space Mono', monospace;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.facts .fact-value {
+  display: block;
+  color: var(--bone);
+  opacity: 1;
+  visibility: visible;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.65;
+}
+.facts a {
+  color: var(--bone);
+  text-decoration: underline;
+  text-decoration-color: var(--gold-line);
+  text-underline-offset: 3px;
+}
+.facts a:hover { color: var(--acid); }
+
+.site-footer {
+  text-align: center;
+  padding: 30px;
+  font-family: 'Space Mono', monospace;
+  font-size: .7rem;
+  color: var(--smoke);
+  border-top: 1px solid var(--gold-line);
+}
+.footer-links {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.footer-links a {
+  border-bottom: 1px solid var(--gold-line);
+  text-decoration: none;
+}
+.footer-links a:hover { color: var(--rust); }
+
+@media (max-width: 600px) {
+  main { padding: 38px 18px 60px; }
+  .facts { padding: 20px; }
+  .facts p { margin-bottom: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
 </style>
 </head>
 
 <body>
-
 <header class="site-header">
   <div class="header-inner">
-    <a href="index.html" class="brand-logo"><img src="logo.png" alt="J'Art Studio"></a>
+    <a href="index.html" class="brand-logo">
+      <img src="logo.png" alt="J'Art Studio">
+    </a>
     <a href="index.html" class="back-top">← Főoldal</a>
   </div>
 </header>
@@ -79,44 +241,97 @@ li{ margin-bottom:8px; padding-left:4px; }
 
   <section id="vasarlas">
     <h2>1. Vásárlási információk</h2>
+
     <h3>Hogyan tudsz vásárolni a J’Art Studio oldalán?</h3>
     <p>A weboldal elsősorban a J’Art Studio munkáinak és elérhető termékeinek bemutatására szolgál. Az oldalon nincs hagyományos kosár, pénztár vagy automatikus online bankkártyás fizetés.</p>
-    <p>Ha valamelyik termék megtetszik, egyszerűen írj egy üzenetet az oldalon található kapcsolatfelvételi űrlapon keresztül.</p>
+    <p>Ha valamelyik termék megtetszik, egyszerűen írj egy üzenetet az oldalon található kapcsolatfelvételi űrlapon keresztül. Nem szükséges termékkódokat megjegyezned: elég, ha leírod, melyik darab érdekel, vagy akár egy képernyőképet is küldesz róla.</p>
+    <p>Az üzenetedre lehetőség szerint 24–48 órán belül válaszolok, és ezt követően egyeztetjük a rendelés részleteit, a fizetési módot, valamint az átvétel vagy szállítás lehetőségét.</p>
+
+    <h3>Fizetési lehetőségek</h3>
+    <ul>
+      <li>Személyes átvétel esetén készpénzes fizetés vagy azonnali banki átutalás.</li>
+      <li>Futárszolgálattal történő kézbesítés esetén előre utalás a kiállított számla alapján, illetve az adott szállítási lehetőség esetén utánvétes fizetés.</li>
+    </ul>
+
+    <h3>Szállítás és átvétel</h3>
+    <ul>
+      <li>Személyes átvétel előre egyeztetett helyszínen és időpontban.</li>
+      <li>Futárszolgálattal történő kézbesítés esetén a szállítási módot és annak költségét a megrendelés egyeztetése során pontosítjuk (igény szerint együttműködő partnereink révén: Foxpost, GLS, Packeta, MPL).</li>
+    </ul>
+
+    <h3>Számlázás és elállási jog</h3>
+    <ul>
+      <li>Egyéni vállalkozóként az értékesítésről a vonatkozó jogszabályoknak megfelelő bizonylatot, illetve számlát állítok ki.</li>
+      <li>Előre elkészített, nem személyre szabott termék esetén fogyasztóként a jogszabályban meghatározott feltételek mellett a termék kézhezvételétől számított 14 napon belül indokolás nélkül elállhatsz a vásárlástól.</li>
+      <li>A 14 napos elállási jog nem illeti meg a fogyasztót olyan, nem előre gyártott termék esetében, amelyet kifejezetten a fogyasztó utasítása alapján vagy kifejezett kérésére állítottak elő, illetve olyan termék esetében, amelyet egyértelműen személyre szabtak (pl. egyedi méret, egyedi színkombináció vagy névvel, felirattal történő személyre szabás).</li>
+    </ul>
   </section>
 
   <section id="adatkezeles">
     <h2>2. Adatkezelési tájékoztató</h2>
+
     <div class="facts">
-      <p><strong>Adatkezelő</strong> Antal János E. V. (J’Art Studio)</p>
-      <p><strong>Székhely</strong> 3770 Sajószentpéter, Május 1. utca 32.</p>
-      <p><strong>E-mail</strong> <a href="mailto:antaljaanos1@gmail.com">antaljaanos1@gmail.com</a></p>
-      <p><strong>Telefonszám</strong> <a href="tel:+36704216563">+36 70 421 6563</a></p>
+      <p><strong>Adatkezelő</strong><span class="fact-value">Antal János E. V. (J’Art Studio)</span></p>
+      <p><strong>Székhely</strong><span class="fact-value">3770 Sajószentpéter, Május 1. utca 32.</span></p>
+      <p><strong>E-mail</strong><span class="fact-value"><a href="mailto:antaljaanos1@gmail.com">antaljaanos1@gmail.com</a></span></p>
+      <p><strong>Telefonszám</strong><span class="fact-value"><a href="tel:+36704216563">+36 70 421 6563</a></span></p>
     </div>
+
+    <h3>Az adatkezelés célja és jogalapja</h3>
+    <p>A személyes adatokat kizárólag a jogszabályi keretek között, a következő célokból és jogalapokkal kezelem:</p>
+    <ul>
+      <li><strong>Kapcsolatfelvétel, ajánlatkérés és megrendelés előkészítése:</strong> Az adatkezelés jogalapja a GDPR 6. cikk (1) bekezdés b) pontja (az érintett kérésére történő, szerződéskötést megelőző lépések megtétele).</li>
+      <li><strong>Megrendelés teljesítése és kézbesítés:</strong> Az adatkezelés jogalapja a GDPR 6. cikk (1) bekezdés b) pontja (szerződés teljesítése).</li>
+      <li><strong>Számlázás és számvitel:</strong> Az adatkezelés jogalapja a GDPR 6. cikk (1) bekezdés c) pontja (jogi kötelezettség teljesítése).</li>
+    </ul>
+
+    <h3>Kezelt adatok köre</h3>
+    <p>A kapcsolatfelvétel és a rendelés jellegétől függően név, e-mail-cím, telefonszám, számlázási cím, valamint szállítás esetén a szállítási cím.</p>
+
+    <h3>Adattovábbítás és címzettek</h3>
+    <p>A személyes adatokat bizalmasan kezelem. Azokat csak olyan szolgáltatók részére továbbítom, akiknek a bevonása a folyamathoz elengedhetetlenül szükséges:</p>
+    <ul>
+      <li>Számlázási szolgáltató / program (pl. Billingo vagy Számlázz.hu),</li>
+      <li>Könyvelő,</li>
+      <li>A konkrét megrendeléshez kiválasztott futárszolgálat (pl. Foxpost, GLS, Packeta, MPL),</li>
+      <li>A weboldal kapcsolatfelvételi űrlapját működtető szolgáltató (Formspree, USA), amelyen keresztül az elküldött üzenet eljut hozzám.</li>
+    </ul>
+    <p>Személyes adatokat marketingcélból harmadik félnek nem adok át.</p>
+
+    <h3>Adatmegőrzés</h3>
+    <p>A személyes adatokat csak a cél eléréséhez szükséges ideig kezelem. A számviteli bizonylatokat és a jogszabály alapján megőrzendő számviteli és számlázási adatokat a számviteli törvény előírásai szerint 8 évig köteles vagyok megőrizni.</p>
+
+    <h3>A weboldal használata</h3>
+    <p>A weboldal nem használ analitikai vagy marketing célú sütiket, és nem követi a látogatók tevékenységét. A weboldal tárhelyét a Netlify (USA) biztosítja, a betűtípusokat a Google Fonts szolgáltatásból tölti be, ami a böngésző IP-címének technikai továbbításával járhat.</p>
+
+    <h3>Az érintett jogai</h3>
+    <p>Kérhetsz tájékoztatást az adataidról, kérheted azok helyesbítését vagy törlését (kivéve a jogszabályi kötelezettség miatt őrzendő számlákat). Ha panaszod van, először keress engem bizalommal, vagy jogod van panaszt tenni a Nemzeti Adatvédelmi és Információszabadság Hatóságnál (NAIH).</p>
   </section>
 
   <section id="impresszum">
     <h2>3. Szolgáltató adatai (impresszum)</h2>
+
     <div class="facts">
-      <p><strong>Név</strong> Antal János egyéni vállalkozó</p>
-      <p><strong>Márkanév</strong> J’Art Studio</p>
-      <p><strong>Székhely</strong> 3770 Sajószentpéter, Május 1. utca 32.</p>
-      <p><strong>Nyilvántartási szám</strong> 62808013</p>
-      <p><strong>Adószám</strong> 92375341-1-25</p>
-      <p><strong>E-mail</strong> <a href="mailto:antaljaanos1@gmail.com">antaljaanos1@gmail.com</a></p>
-      <p><strong>Telefonszám</strong> <a href="tel:+36704216563">+36 70 421 6563</a></p>
-      <p><strong>Tárhelyszolgáltató</strong> Netlify, Inc. (USA)</p>
+      <p><strong>Név</strong><span class="fact-value">Antal János egyéni vállalkozó</span></p>
+      <p><strong>Márkanév</strong><span class="fact-value">J’Art Studio</span></p>
+      <p><strong>Székhely</strong><span class="fact-value">3770 Sajószentpéter, Május 1. utca 32.</span></p>
+      <p><strong>Nyilvántartási szám</strong><span class="fact-value">62808013</span></p>
+      <p><strong>Adószám</strong><span class="fact-value">92375341-1-25</span></p>
+      <p><strong>E-mail</strong><span class="fact-value"><a href="mailto:antaljaanos1@gmail.com">antaljaanos1@gmail.com</a></span></p>
+      <p><strong>Telefonszám</strong><span class="fact-value"><a href="tel:+36704216563">+36 70 421 6563</a></span></p>
+      <p><strong>Tárhelyszolgáltató</strong><span class="fact-value">Netlify, Inc. (USA)</span></p>
     </div>
   </section>
 </main>
 
 <footer class="site-footer">
   <div class="footer-links">
-    <a href="tajekoztato.html#adatkezeles">Adatkezelés</a>
-    <a href="tajekoztato.html#vasarlas">Vásárlás</a>
-    <a href="tajekoztato.html#impresszum">Impresszum</a>
+    <a href="index.html">Főoldal</a>
+    <a href="#adatkezeles">Adatkezelés</a>
+    <a href="#vasarlas">Vásárlás</a>
+    <a href="#impresszum">Impresszum</a>
   </div>
   <p>© 2026 J'Art Studio. Minden jog fenntartva.</p>
 </footer>
-
 </body>
 </html>
