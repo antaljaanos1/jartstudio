@@ -255,7 +255,20 @@ body::before{
 </footer>
 
 <script>
-/* Ez a rész NEM függ a Supabase-től: ha az adatbázis elérhetetlen, a menü és a rajzolás akkor is megy. */
+const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_iaBMUObVjd_zfHC5deYqdw_ewgIQa0o';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const CATS = [
+  { key: 'festmenyek',   name: 'Festmények',      db: ['Festmények'] },
+  { key: 'szen-grafika', name: 'Szén és grafika', db: ['Szén és grafika'] },
+  { key: 'ter-forma',    name: 'Tér és forma',    db: ['Tér és forma', '3D Dekoráció'] },
+  { key: 'egyeb',        name: 'Egyéb',           db: ['Egyéb'] }
+];
+const NEWEST_COUNT = 3;
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
 /* ---------- Menü ---------- */
 const menuBtn = document.getElementById('menuToggle');
 const navLinks = document.getElementById('navLinks');
@@ -268,40 +281,44 @@ function setMenu(open) {
 menuBtn.addEventListener('click', () => setMenu(!navLinks.classList.contains('active')));
 navLinks.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
 
-/* ---------- Festékfolt a hero-ban ---------- */
-(function () {
-  const cv = document.getElementById('smudgeCanvas');
-  const ctx = cv.getContext('2d');
-  const COLORS = ['193,68,14', '201,162,39', '237,230,214', '214,160,110'];
-  let dpr = 1, last = null, down = false, ci = 0, active = 0, running = false, frame = 0;
+/* ---------- Alkotások ---------- */
+function cardHtml(p) {
+  return `
+    <article class="art-card">
+      <img src="${esc(p.kep_url)}" alt="${esc(p.nev)}" loading="lazy">
+      <div class="art-body">
+        <h3 class="art-title">${esc(p.nev)}</h3>
+        <div class="art-price">${esc(p.ar)}</div>
+        ${p.leiras ? `<p class="art-desc">${esc(p.leiras)}</p>` : ''}
+      </div>
+    </article>`;
+}
 
-  function resize() { dpr = window.devicePixelRatio || 1; cv.width = cv.clientWidth * dpr; cv.height = cv.clientHeight * dpr; }
-  resize();
-  window.addEventListener('resize', resize);
+(async function () {
+  try {
+    const { data, error } = await sb.from('termekek').select('*')
+      .order('sorrend', { ascending: true })
+      .order('id', { ascending: false });
+    if (error) throw error;
 
-  function pos(e) { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * dpr, y: (e.clientY - r.top) * dpr }; }
+    const newest = [...data].sort((a, b) => b.id - a.id).slice(0, NEWEST_COUNT);
+    if (newest.length) {
+      document.getElementById('grid-ujdonsag').innerHTML = newest.map(cardHtml).join('');
+      document.getElementById('ujdonsag').hidden = false;
+    }
 
-  function blob(x, y) {
-    const r = (14 + Math.random() * 14) * dpr, c = COLORS[ci];
-    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-    g.addColorStop(0, `rgba(${c},.55)`); g.addColorStop(1, `rgba(${c},0)`);
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
-  }
-  function stroke(a, b) {
-    const steps = Math.max(1, Math.floor(Math.hypot(b.x - a.x, b.y - a.y) / (6 * dpr)));
-    for (let i = 1; i <= steps; i++) blob(a.x + (b.x - a.x) * i / steps, a.y + (b.y - a.y) * i / steps);
-  }
-  function fade() {
-    frame++;
-    if (frame % 4 === 0) { ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0,0,0,.06)'; ctx.fillRect(0, 0, cv.width, cv.height); }
-    if (performance.now() - active < 9000) requestAnimationFrame(fade);
-    else { running = false; ctx.clearRect(0, 0, cv.width, cv.height); }
-  }
-  function wake() { active = performance.now(); if (!running) { running = true; requestAnimationFrame(fade); } }
-
-  cv.addEventListener('pointerdown', e => { down = true; last = pos(e); ci = (ci + 1) % COLORS.length; cv.setPointerCapture(e.pointerId); blob(last.x, last.y); wake(); });
-  cv.addEventListener('pointermove', e => { if (!down) return; const p = pos(e); stroke(last, p); last = p; wake(); });
-  const up = () => { down = false; };
-  cv.addEventListener('pointerup', up);
-  cv.addEventListener
+    const tiles = CATS.map(c => {
+      const items = data.filter(p => c.db.includes(p.kategoria));
+      if (!items.length) return '';
+      return `
+        <a class="cat-tile" href="kategoria.html?k=${c.key}" target="_blank" rel="noopener">
+          <img src="${esc(items[0].kep_url)}" alt="" loading="lazy">
+          <div class="cat-tile-body">
+            <h3>${esc(c.name)}</h3>
+            <span>${items.length} alkotás</span>
+          </div>
+        </a>`;
+    }).join('');
+    if (tiles) {
+      document.getElementById('catGrid').innerHTML = tiles;
+      document.getElementById('alkotasok').hidden = f
