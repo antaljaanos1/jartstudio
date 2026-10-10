@@ -3,132 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>J'Art Studio</title>
-
+<title>J'Art Studio – A kreativitás szabad tere</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,0..144,300;1,0..144,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-
 <style>
 :root{
   --black:#16130F; --deep:#211D18; --bone:#EDE6D6; --cream:#F5EFE3;
   --rust:#C1440E; --acid:#C9A227; --gold-line:rgba(201,162,39,.45); --smoke:#8A8577;
 }
-
 *{ margin:0; padding:0; box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
-body{
-  background:var(--bone); color:var(--black);
-  font-family:'Work Sans',sans-serif; font-weight:300; line-height:1.6; overflow-x:hidden;
-}
-button,input,textarea{ font:inherit; }
+body{ background:var(--bone); color:var(--black); font-family:'Work Sans',sans-serif; font-weight:300; line-height:1.6; overflow-x:hidden; }
 a{ color:inherit; text-decoration:none; }
-
-/* ---------- HEADER ---------- */
-.site-header{
-  position:sticky; top:0; z-index:500;
-  background:rgba(237,230,214,.96); backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--black); box-shadow:0 1px 0 var(--gold-line);
-  padding:10px 18px;
+[hidden]{ display:none !important; }
+section{ scroll-margin-top:64px; }
+body::before{
+  content:""; position:fixed; inset:0; z-index:999; pointer-events:none; opacity:.045; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
+::selection{ background:var(--rust); color:var(--bone); }
+
+/* ---------- FEJLÉC ---------- */
+.site-header{ position:sticky; top:0; z-index:500; background:rgba(237,230,214,.96); backdrop-filter:blur(10px); border-bottom:1px solid var(--black); box-shadow:0 1px 0 var(--gold-line); padding:10px 18px; }
 .header-inner{ width:100%; max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
-.nav-logo img{ height:32px; width:auto; display:block; object-fit:contain; }
+.brand-title{ font-family:'Fraunces',serif; font-size:1.4rem; color:var(--rust); font-weight:400; letter-spacing:1px; }
+.menu-toggle{ display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:none; border:1px solid var(--black); color:var(--black); cursor:pointer; font-size:1.2rem; }
 
-.menu-toggle{
-  display:flex; align-items:center; justify-content:center; width:40px; height:40px;
-  background:none; border:1px solid var(--black); color:var(--black); cursor:pointer; font-size:1.2rem;
-}
-
-/* Mobil menü lenyíló nézet */
-.nav-links{
-  list-style:none; display:none; position:absolute; top:100%; left:0; width:100%;
-  background:var(--bone); padding:20px 22px 28px; flex-direction:column; align-items:flex-start; gap:14px;
-  border-bottom:1px solid var(--gold-line); box-shadow:0 10px 25px rgba(0,0,0,.15);
-}
-.nav-links.show{ display:flex !important; }
-.nav-links > li{ width:100%; }
-.nav-links > li > a{
-  display:block; padding:8px 0; font-family:'Space Mono',monospace; font-size:.8rem; font-weight:700;
-  text-transform:uppercase; letter-spacing:1.5px; transition:color .2s;
-}
+.nav-links{ list-style:none; display:none; position:absolute; top:100%; left:0; width:100%; background:var(--bone); padding:20px 22px 28px; flex-direction:column; align-items:flex-start; gap:14px; border-bottom:1px solid var(--gold-line); box-shadow:0 10px 25px rgba(0,0,0,.15); }
+.nav-links.active{ display:flex; }
+.nav-links > li{ width:100%; position:relative; }
+.nav-links > li > a, .nav-links > li > span{ display:block; padding:8px 0; font-family:'Space Mono',monospace; font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--black); }
 .nav-links > li > a:hover{ color:var(--rust); }
+.sub-menu{ padding-left:15px; margin-top:5px; display:flex; flex-direction:column; gap:8px; border-left:2px solid var(--gold-line); }
+.sub-menu a{ font-family:'Space Mono',monospace; font-size:.74rem; letter-spacing:1px; text-transform:uppercase; color:var(--smoke); padding:4px 0; }
+.sub-menu a:hover{ color:var(--rust); }
+
+/* sor a fejléc alatt */
+.cat-bar{ display:flex; align-items:center; gap:10px; padding:10px 18px; background:var(--deep); border-bottom:1px solid var(--gold-line); overflow-x:auto; white-space:nowrap; }
+.cat-bar > span{ font-family:'Space Mono',monospace; font-size:.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--acid); margin-right:6px; flex:none; }
+.cat-bar a{ flex:none; padding:6px 12px; border:1px solid var(--gold-line); font-family:'Space Mono',monospace; font-size:.7rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--bone); transition:background .2s,color .2s; }
+.cat-bar a:hover{ background:var(--acid); color:var(--black); }
 
 /* ---------- HERO ---------- */
-.hero{
-  position:relative; height:60vh; min-height:405px;
-  background:radial-gradient(circle at 50% 48%, #4a4033 0%, #28231e 25%, #16130F 58%, #0c0a08 100%);
-  overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
-}
+.hero{ position:relative; height:60vh; min-height:405px; background:radial-gradient(circle at 50% 48%, #4a4033 0%, #28231e 25%, #16130F 58%, #0c0a08 100%); overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
 #smudgeCanvas{ position:absolute; inset:0; width:100%; height:100%; z-index:1; cursor:crosshair; touch-action:none; }
-.hero-logo-backdrop{
-  position:absolute; z-index:2; width:72%; max-width:520px; aspect-ratio:1/.72;
-  background:radial-gradient(ellipse, rgba(237,230,214,.98) 0%, rgba(237,230,214,.88) 38%, rgba(201,162,39,.34) 62%, rgba(201,162,39,0) 80%);
-  filter:blur(3px); transform:rotate(-3deg); pointer-events:none;
-}
-.hero-inner{ position:relative; z-index:5; pointer-events:none; padding:0 20px; display:flex; justify-content:center; align-items:center; }
-.hero-logo{
-  width:auto; height:clamp(110px,32vw,190px);
-  filter:drop-shadow(0 10px 25px rgba(0,0,0,.6)) drop-shadow(0 0 22px rgba(237,230,214,.13));
-}
-.hero-hint{
-  position:absolute; bottom:24px; left:50%; transform:translateX(-50%); width:90%; z-index:5; pointer-events:none;
-  color:rgba(237,230,214,.55); font-family:'Space Mono',monospace; font-size:.61rem; letter-spacing:1.5px; text-transform:uppercase;
-  animation:bob 2.4s ease-in-out infinite;
-}
-@keyframes bob{
-  0%,100%{ transform:translateX(-50%) translateY(0); }
-  50%{ transform:translateX(-50%) translateY(6px); }
-}
+.hero-text-box{ position:relative; z-index:5; pointer-events:none; padding:0 20px; color:var(--bone); }
+.hero-text-box h1{ font-family:'Fraunces',serif; font-size:clamp(2.5rem,6vw,4rem); font-weight:300; font-style:italic; margin-bottom:10px; }
+.hero-text-box p{ font-family:'Space Mono',monospace; font-size:.8rem; letter-spacing:2px; text-transform:uppercase; color:var(--acid); }
+.hero-hint{ position:absolute; bottom:24px; left:50%; transform:translateX(-50%); width:90%; z-index:5; pointer-events:none; color:rgba(237,230,214,.55); font-family:'Space Mono',monospace; font-size:.61rem; letter-spacing:1.5px; text-transform:uppercase; animation:bob 2.4s ease-in-out infinite; }
+@keyframes bob{ 0%,100%{ transform:translateX(-50%) translateY(0); } 50%{ transform:translateX(-50%) translateY(6px); } }
 
-/* ---------- GALÉRIA & RÓLAM ---------- */
-.about-section{
-  padding:80px 20px; background:var(--deep); color:var(--bone);
-  border-bottom:1px solid var(--gold-line); position:relative; overflow:hidden;
-}
-.about-inner{ max-width:800px; margin:0 auto; }
+/* ---------- RÓLAM ---------- */
+.about-section{ padding:100px 20px; background:var(--deep); color:var(--bone); border-bottom:1px solid var(--gold-line); position:relative; overflow:hidden; }
+.about-section::before{ content:"J'ART"; position:absolute; right:-35px; top:50%; transform:translateY(-50%); font-family:'Fraunces',serif; font-size:clamp(8rem,22vw,18rem); font-weight:300; font-style:italic; color:rgba(237,230,214,.025); pointer-events:none; white-space:nowrap; }
+.about-inner{ position:relative; z-index:2; max-width:800px; margin:0 auto; }
 .about-label{ display:block; font-family:'Space Mono',monospace; font-size:.68rem; font-weight:700; letter-spacing:3px; color:var(--acid); margin-bottom:22px; }
-.about-section h2{ font-family:'Fraunces',serif; font-size:clamp(2.5rem,7vw,4.5rem); line-height:1.05; font-weight:300; margin-bottom:25px; }
-.about-section h2 em{ color:var(--rust); font-style:italic; }
-.about-line{ width:70px; height:1px; background:var(--acid); margin-bottom:30px; }
-.about-lead{ font-size:1.1rem; line-height:1.8; color:var(--bone); margin-bottom:24px; }
-.about-text{ font-size:1rem; line-height:1.8; color:rgba(237,230,214,.75); margin-bottom:24px; }
-.about-section blockquote{
-  border-left:2px solid var(--rust); padding-left:20px; margin:30px 0;
-  font-family:'Fraunces',serif; font-size:1.4rem; font-style:italic; color:var(--cream);
-}
+.about-section h2{ font-family:'Fraunces',serif; font-size:clamp(2.8rem,8vw,5.2rem); line-height:1.02; font-weight:300; letter-spacing:-1.5px; margin-bottom:30px; }
+.about-section h2 em{ color:var(--rust); font-weight:300; }
+.about-line{ width:70px; height:1px; background:var(--acid); margin-bottom:32px; }
+.about-lead{ max-width:680px; font-size:1.12rem; line-height:1.85; color:var(--bone); margin-bottom:28px; }
+.about-text, .about-final{ max-width:680px; font-size:1rem; line-height:1.9; color:rgba(237,230,214,.72); margin-bottom:28px; }
+.about-final{ margin-bottom:0; }
+.about-section blockquote{ border-left:2px solid var(--rust); padding:8px 0 8px 25px; margin:35px 0; max-width:620px; font-family:'Fraunces',serif; font-size:clamp(1.35rem,4vw,1.8rem); font-style:italic; line-height:1.4; color:var(--cream); }
 
-.gallery-section{ padding:60px 20px; max-width:1200px; margin:0 auto; border-bottom:1px solid var(--gold-line); }
-.gallery-section h2{ font-family:'Fraunces',serif; font-size:2.4rem; font-weight:300; font-style:italic; margin-bottom:6px; color:var(--black); }
-.section-desc{ font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--smoke); margin-bottom:25px; }
+/* ---------- GALÉRIA / CSEMPÉK ---------- */
+.gallery-section{ padding:70px 20px; max-width:1200px; margin:0 auto; border-bottom:1px solid var(--gold-line); }
+.gallery-section h2{ font-family:'Fraunces',serif; font-size:clamp(2.2rem,5vw,3.2rem); font-weight:300; font-style:italic; margin-bottom:6px; letter-spacing:-0.5px; line-height:1.15; }
+.section-desc{ font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--smoke); margin-bottom:30px; }
+.load-msg{ max-width:1200px; margin:0 auto; padding:40px 20px; text-align:center; color:var(--smoke); font-family:'Space Mono',monospace; font-size:.75rem; }
 
-.grid-placeholder{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; }
+.cat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; }
+.cat-tile{ position:relative; display:block; aspect-ratio:4/3; overflow:hidden; border:1px solid var(--gold-line); background:var(--deep); }
+.cat-tile img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+.cat-tile::after{ content:""; position:absolute; inset:0; background:linear-gradient(to top, rgba(22,19,15,.9) 0%, rgba(22,19,15,.1) 62%); }
+.cat-tile:hover img{ transform:scale(1.04); }
+.cat-tile-body{ position:absolute; left:0; right:0; bottom:0; z-index:2; padding:18px 20px; color:var(--bone); }
+.cat-tile h3{ font-family:'Fraunces',serif; font-size:1.7rem; font-weight:300; font-style:italic; line-height:1.15; }
+.cat-tile span{ display:block; margin-top:4px; font-family:'Space Mono',monospace; font-size:.68rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--acid); }
+
+.grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; }
 .art-card{ background:var(--deep); border:1px solid var(--gold-line); color:var(--bone); display:flex; flex-direction:column; overflow:hidden; }
 .art-card img{ width:100%; height:280px; object-fit:cover; display:block; background:var(--black); cursor:zoom-in; }
 .art-body{ padding:16px 18px 20px; display:flex; flex-direction:column; gap:6px; flex:1; }
-.art-title{ font-family:'Fraunces',serif; font-size:1.3rem; font-weight:300; }
-.art-price{ font-family:'Space Mono',monospace; font-size:.85rem; font-weight:700; color:var(--acid); }
-.art-desc{ font-size:.9rem; line-height:1.6; color:rgba(237,230,214,.72); white-space:pre-line; }
+.art-title{ font-family:'Fraunces',serif; font-size:1.3rem; font-weight:300; line-height:1.25; }
+.art-price{ font-family:'Space Mono',monospace; font-size:.8rem; font-weight:700; letter-spacing:1px; color:var(--acid); }
+.art-desc{ font-size:.9rem; line-height:1.7; color:rgba(237,230,214,.72); white-space:pre-line; }
+.lightbox{ position:fixed; inset:0; z-index:2000; background:rgba(12,10,8,.94); display:flex; align-items:center; justify-content:center; padding:20px; cursor:zoom-out; }
+.lightbox img{ max-width:100%; max-height:100%; object-fit:contain; }
 
-.empty-info{ color:var(--smoke); font-family:'Space Mono',monospace; font-size:.75rem; font-style:italic; }
-
-/* KAPCSOLAT & FOOTER */
-.contact-section{ padding:60px 20px; max-width:800px; margin:0 auto; }
-.contact-section h2{ font-family:'Fraunces',serif; font-size:2.4rem; text-align:center; margin-bottom:10px; }
-.contact-subtitle{ text-align:center; font-size:.95rem; color:var(--smoke); margin-bottom:30px; }
-.order-card{ background:var(--deep); padding:30px; border:1px solid var(--gold-line); color:var(--bone); }
-.form-field{ margin-bottom:16px; display:flex; flex-direction:column; gap:6px; }
-.form-field label{ font-family:'Space Mono',monospace; font-size:.7rem; text-transform:uppercase; color:var(--acid); }
-.form-field input, .form-field textarea{ background:var(--black); border:1px solid var(--smoke); color:var(--bone); padding:12px; outline:none; }
-.order-submit{ width:100%; padding:14px; background:var(--rust); color:var(--bone); border:none; font-family:'Space Mono',monospace; font-weight:700; text-transform:uppercase; cursor:pointer; }
-
+/* ---------- KAPCSOLAT ---------- */
+.contact-section{ padding:70px 20px; max-width:800px; margin:0 auto; }
+.contact-section h2{ font-family:'Fraunces',serif; font-size:clamp(2.2rem,6vw,3.2rem); font-weight:300; font-style:italic; margin-bottom:12px; text-align:center; }
+.contact-subtitle{ text-align:center; font-size:.95rem; color:var(--smoke); margin-bottom:35px; }
+.order-card{ background:var(--deep); padding:35px; border:1px solid var(--gold-line); box-shadow:0 20px 40px rgba(0,0,0,.3); color:var(--bone); }
+.order-card h3{ font-family:'Fraunces',serif; font-size:1.5rem; margin-bottom:25px; font-weight:300; }
+.order-tag{ font-family:'Space Mono',monospace; text-transform:uppercase; letter-spacing:3px; font-size:.68rem; color:var(--rust); display:block; margin-bottom:10px; }
+.form-field{ margin-bottom:18px; display:flex; flex-direction:column; gap:6px; }
+.form-field label{ font-family:'Space Mono',monospace; font-size:.7rem; text-transform:uppercase; letter-spacing:1px; color:var(--acid); }
+.form-field input, .form-field textarea{ font:inherit; background:var(--black); border:1px solid var(--smoke); color:var(--bone); padding:12px 15px; outline:none; transition:border-color .3s; }
+.form-field input:focus, .form-field textarea:focus{ border-color:var(--rust); }
+.form-field textarea{ min-height:110px; resize:vertical; }
+.order-submit{ display:inline-block; width:100%; padding:14px; background:var(--rust); color:var(--bone); border:none; font-family:'Space Mono',monospace; font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; cursor:pointer; transition:background .3s,color .3s; }
+.order-submit:hover{ background:var(--acid); color:var(--black); }
 .site-footer{ text-align:center; padding:30px; font-family:'Space Mono',monospace; font-size:.7rem; color:var(--smoke); border-top:1px solid var(--gold-line); }
 
+@media(max-width:600px){
+  .about-section{ padding:75px 25px; }
+  .about-section h2{ font-size:clamp(2.7rem,13vw,4rem); }
+  .about-lead{ font-size:1.05rem; }
+  .about-text, .about-final{ font-size:.96rem; line-height:1.85; }
+  .about-section blockquote{ font-size:1.35rem; padding-left:20px; margin:30px 0; }
+  .order-card{ padding:25px; }
+}
 @media(min-width:768px){
   .menu-toggle{ display:none; }
-  .nav-links{ position:static; display:flex !important; width:auto; padding:0; background:none; flex-direction:row; align-items:center; gap:24px; border:none; box-shadow:none; }
-  .nav-links > li > a{ padding:0; font-size:.7rem; }
+  .nav-links{ position:static; display:flex; width:auto; padding:0; background:none; flex-direction:row; align-items:center; gap:24px; border:none; box-shadow:none; }
+  .nav-links > li{ width:auto; }
+  .nav-links > li > a, .nav-links > li > span{ padding:4px 0; font-size:.7rem; }
+  .nav-links > li > span{ cursor:default; }
+  .sub-menu{ display:none; position:absolute; top:100%; left:-14px; min-width:210px; margin:0; padding:12px 16px; background:var(--bone); border:1px solid var(--gold-line); box-shadow:0 10px 20px rgba(0,0,0,.2); }
+  .has-sub:hover .sub-menu, .has-sub:focus-within .sub-menu{ display:flex; }
 }
+@media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } .hero-hint{ animation:none; } .cat-tile img{ transition:none; } }
 </style>
 </head>
 
@@ -136,26 +134,42 @@ a{ color:inherit; text-decoration:none; }
 
 <header class="site-header">
   <div class="header-inner">
-    <a href="#" class="nav-logo"><img src="logo.png" alt="J'Art Studio"></a>
-    <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+    <a href="./" class="brand-title">J'ART STUDIO</a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-label="Menü megnyitása">☰</button>
 
     <ul class="nav-links" id="navLinks">
       <li><a href="#rolam">Rólam</a></li>
-      <li><a href="#festmenyek">Festmények</a></li>
-      <li><a href="#szen-grafika">Szén és grafika</a></li>
-      <li><a href="#ter-forma">Tér és forma</a></li>
-      <li><a href="#egyeb">Egyéb</a></li>
+      <li class="has-sub" tabindex="0">
+        <span>Kategóriák ▾</span>
+        <div class="sub-menu">
+          <a href="kategoria.html?k=festmenyek" target="_blank" rel="noopener">Festmények</a>
+          <a href="kategoria.html?k=szen-grafika" target="_blank" rel="noopener">Szén és grafika</a>
+          <a href="kategoria.html?k=ter-forma" target="_blank" rel="noopener">Tér és forma</a>
+          <a href="kategoria.html?k=egyeb" target="_blank" rel="noopener">Egyéb</a>
+        </div>
+      </li>
       <li><a href="#kapcsolat">Kapcsolat</a></li>
     </ul>
   </div>
 </header>
 
+<!-- sor a név alatt -->
+<nav class="cat-bar" aria-label="Kategóriák">
+  <span>Válassz kategóriát</span>
+  <a href="kategoria.html?k=festmenyek" target="_blank" rel="noopener">Festmények</a>
+  <a href="kategoria.html?k=szen-grafika" target="_blank" rel="noopener">Szén és grafika</a>
+  <a href="kategoria.html?k=ter-forma" target="_blank" rel="noopener">Tér és forma</a>
+  <a href="kategoria.html?k=egyeb" target="_blank" rel="noopener">Egyéb</a>
+</nav>
+
 <main>
 
 <section class="hero">
   <canvas id="smudgeCanvas"></canvas>
-  <div class="hero-logo-backdrop"></div>
-  <div class="hero-inner"><img src="logo.png" alt="J'Art Studio" class="hero-logo"></div>
+  <div class="hero-text-box">
+    <h1>A kreativitás szabad tere.</h1>
+    <p>J'Art Studio</p>
+  </div>
   <div class="hero-hint">Készíts festékfoltot ujjaddal</div>
 </section>
 
@@ -167,7 +181,8 @@ a{ color:inherit; text-decoration:none; }
 
     <p class="about-lead">
       Gyerekkorom óta rajzolok és festek, de pár éve kezdtem komolyan venni.
-      Nem volt hozzá terv, csak egy belső kényszer, ki kellett engednem valamit, ami már régóta bennem volt.
+      Nem volt hozzá terv, csak egy belső kényszer,
+      ki kellett engednem valamit, ami már régóta bennem volt.
     </p>
 
     <p class="about-text">
@@ -177,35 +192,25 @@ a{ color:inherit; text-decoration:none; }
 
     <blockquote>„A kreativitás nem korlátokról, hanem a tiszta kifejezésről szól.”</blockquote>
 
-    <p class="about-text">
-      A J'Art Studio ezeknek a munkáknak a tere. Nézd meg, és ha valami megszólít, vagy szeretnél egyedi darabot, keress bátran.
+    <p class="about-final">
+      A J'Art Studio ezeknek a munkáknak a tere. Nézd meg, és ha valami megszólít,
+      vagy szeretnél egyedi darabot, keress bátran.
     </p>
   </div>
 </section>
 
-<!-- KATEGÓRIA SZEKCIÓK -->
-<section class="gallery-section" id="festmenyek">
-  <h2>Festmények</h2>
-  <p class="section-desc">Vásznak, akril és olaj munkák</p>
-  <div class="grid-placeholder" id="grid-Festmények"><p class="empty-info">Betöltés...</p></div>
+<div class="load-msg" id="loadMsg" hidden>Az alkotások betöltése nem sikerült. Próbáld újra később.</div>
+
+<section class="gallery-section" id="ujdonsag" hidden>
+  <h2>Újdonság</h2>
+  <p class="section-desc">A legfrissebb alkotások</p>
+  <div class="grid" id="grid-ujdonsag"></div>
 </section>
 
-<section class="gallery-section" id="szen-grafika">
-  <h2>Szén és grafika</h2>
-  <p class="section-desc">Szénrajzok, ceruza és papír alapú alkotások</p>
-  <div class="grid-placeholder" id="grid-Szén és grafika"><p class="empty-info">Betöltés...</p></div>
-</section>
-
-<section class="gallery-section" id="ter-forma">
-  <h2>Tér és forma</h2>
-  <p class="section-desc">Plasztikák, szobrok és egyedi tárgyak</p>
-  <div class="grid-placeholder" id="grid-Tér és forma"><p class="empty-info">Betöltés...</p></div>
-</section>
-
-<section class="gallery-section" id="egyeb">
-  <h2>Egyéb</h2>
-  <p class="section-desc">Egyedi darabok és különlegességek</p>
-  <div class="grid-placeholder" id="grid-Egyéb"><p class="empty-info">Betöltés...</p></div>
+<section class="gallery-section" id="alkotasok" hidden>
+  <h2>Kategóriák</h2>
+  <p class="section-desc">Válassz a témák közül</p>
+  <div class="cat-grid" id="catGrid"></div>
 </section>
 
 <section class="contact-section" id="kapcsolat">
@@ -213,91 +218,115 @@ a{ color:inherit; text-decoration:none; }
   <p class="contact-subtitle">Egyedi megrendelések, vásárlási szándék vagy együttműködés kapcsán írj bátran.</p>
 
   <div class="order-card">
+    <span class="order-tag">Üzenetküldés</span>
+    <h3>Vedd fel velem a kapcsolatot</h3>
+
     <form action="https://formspree.io/f/mqpzgava" method="POST">
+      <input type="hidden" name="_subject" value="Új üzenet a weboldalról">
       <div class="form-field">
         <label for="f-name">Név</label>
-        <input id="f-name" type="text" name="name" required>
+        <input id="f-name" type="text" name="name" autocomplete="name" required>
       </div>
       <div class="form-field">
         <label for="f-email">Email</label>
-        <input id="f-email" type="email" name="email" required>
+        <input id="f-email" type="email" name="email" autocomplete="email" required>
       </div>
       <div class="form-field">
         <label for="f-msg">Üzenet</label>
         <textarea id="f-msg" name="message" required></textarea>
       </div>
-      <button type="submit" class="order-submit">Üzenet küldése</button>
+      <button type="submit" class="order-submit">Küldés</button>
     </form>
   </div>
 </section>
 
 </main>
 
-<footer class="site-footer">
-  <p>© 2026 J'Art Studio. Minden jog fenntartva.</p>
-</footer>
+<footer class="site-footer"><p>© 2026 J'Art Studio. Minden jog fenntartva.</p></footer>
 
 <script>
-/* Mobil menü toggle nyitás/bezárás */
-const menuBtn = document.getElementById('menuToggle');
-const navLinks = document.getElementById('navLinks');
-
-menuBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  navLinks.classList.toggle('show');
-});
-
-// Menü bezárása kattintás után
-document.querySelectorAll('#navLinks a').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('show');
-  });
-});
-
-/* Supabase adatok lekérése */
 const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_iaBMUObVjd_zfHC5deYqdw_ewgIQa0o';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+const CATS = [
+  { key: 'festmenyek',   name: 'Festmények',      db: ['Festmények'] },
+  { key: 'szen-grafika', name: 'Szén és grafika', db: ['Szén és grafika'] },
+  { key: 'ter-forma',    name: 'Tér és forma',    db: ['Tér és forma', '3D Dekoráció'] },
+  { key: 'egyeb',        name: 'Egyéb',           db: ['Egyéb'] }
+];
+const NEWEST_COUNT = 3;
+
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-async function loadProducts() {
-  const { data, error } = await sb.from('termekek').select('*').order('sorrend', { ascending: true });
-  
-  if (error) {
-    console.error('Supabase hiba:', error);
-    return;
-  }
+/* ---------- Menü ---------- */
+const menuBtn = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+function setMenu(open) {
+  navLinks.classList.toggle('active', open);
+  menuBtn.setAttribute('aria-expanded', String(open));
+  menuBtn.setAttribute('aria-label', open ? 'Menü bezárása' : 'Menü megnyitása');
+  menuBtn.textContent = open ? '✕' : '☰';
+}
+menuBtn.addEventListener('click', () => setMenu(!navLinks.classList.contains('active')));
+navLinks.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
 
-  const categories = ['Festmények', 'Szén és grafika', 'Tér és forma', 'Egyéb'];
-
-  categories.forEach(cat => {
-    const grid = document.getElementById(`grid-${cat}`);
-    if (!grid) return;
-
-    // Megkeressük a kategóriához tartozó termékeket (a "3D Dekoráció"-t is a Tér és forma alá rakjuk)
-    const items = data.filter(p => p.kategoria === cat || (cat === 'Tér és forma' && p.kategoria === '3D Dekoráció'));
-
-    if (!items || items.length === 0) {
-      grid.innerHTML = '<p class="empty-info">Jelenleg nincs feltöltött alkotás ebben a kategóriában.</p>';
-    } else {
-      grid.innerHTML = items.map(p => `
-        <article class="art-card">
-          <img src="${esc(p.kep_url)}" alt="${esc(p.nev)}" loading="lazy">
-          <div class="art-body">
-            <h3 class="art-title">${esc(p.nev)}</h3>
-            <div class="art-price">${esc(p.ar)}</div>
-            ${p.leiras ? `<p class="art-desc">${esc(p.leiras)}</p>` : ''}
-          </div>
-        </article>
-      `).join('');
-    }
-  });
+/* ---------- Alkotások ---------- */
+function cardHtml(p) {
+  return `
+    <article class="art-card">
+      <img src="${esc(p.kep_url)}" alt="${esc(p.nev)}" loading="lazy">
+      <div class="art-body">
+        <h3 class="art-title">${esc(p.nev)}</h3>
+        <div class="art-price">${esc(p.ar)}</div>
+        ${p.leiras ? `<p class="art-desc">${esc(p.leiras)}</p>` : ''}
+      </div>
+    </article>`;
 }
 
-loadProducts();
-</script>
+(async function () {
+  try {
+    const { data, error } = await sb.from('termekek').select('*')
+      .order('sorrend', { ascending: true })
+      .order('id', { ascending: false });
+    if (error) throw error;
 
-</body>
-</html>
+    const newest = [...data].sort((a, b) => b.id - a.id).slice(0, NEWEST_COUNT);
+    if (newest.length) {
+      document.getElementById('grid-ujdonsag').innerHTML = newest.map(cardHtml).join('');
+      document.getElementById('ujdonsag').hidden = false;
+    }
 
+    const tiles = CATS.map(c => {
+      const items = data.filter(p => c.db.includes(p.kategoria));
+      if (!items.length) return '';
+      return `
+        <a class="cat-tile" href="kategoria.html?k=${c.key}" target="_blank" rel="noopener">
+          <img src="${esc(items[0].kep_url)}" alt="" loading="lazy">
+          <div class="cat-tile-body">
+            <h3>${esc(c.name)}</h3>
+            <span>${items.length} alkotás</span>
+          </div>
+        </a>`;
+    }).join('');
+    if (tiles) {
+      document.getElementById('catGrid').innerHTML = tiles;
+      document.getElementById('alkotasok').hidden = false;
+    }
+
+    if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
+  } catch (err) {
+    console.error(err);
+    document.getElementById('loadMsg').hidden = false;
+  }
+})();
+
+/* ---------- Kép nagyítás ---------- */
+const lb = document.createElement('div');
+lb.className = 'lightbox';
+lb.hidden = true;
+lb.innerHTML = '<img alt="">';
+document.body.appendChild(lb);
+document.addEventListener('click', e => {
+  const img = e.target.closest('.art-card img');
+  if (img) { l
