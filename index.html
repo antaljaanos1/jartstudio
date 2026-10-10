@@ -249,6 +249,7 @@ const SUPABASE_URL = 'https://kqwvvueibagfoexofwuu.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_iaBMUObVjd_zfHC5deYqdw_ewgIQa0o';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// Új kategóriához: ide, a kategoria.html-be és az admin.html select-jébe is írj egy sort.
 const CATS = [
   { key: 'festmenyek',   name: 'Festmények',      db: ['Festmények'] },
   { key: 'szen-grafika', name: 'Szén és grafika', db: ['Szén és grafika'] },
@@ -327,6 +328,4 @@ lb.className = 'lightbox';
 lb.hidden = true;
 lb.innerHTML = '<img alt="">';
 document.body.appendChild(lb);
-document.addEventListener('click', e => {
-  const img = e.target.closest('.art-card img');
-  if (img) { l
+document.addEv
